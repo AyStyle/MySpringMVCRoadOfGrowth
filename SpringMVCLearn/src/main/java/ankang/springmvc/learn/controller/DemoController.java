@@ -6,6 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @author: ankang
@@ -23,6 +24,7 @@ public class DemoController {
     @RequestMapping("/handle01")
     public ModelAndView handle01() {
         final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+        final Date date = new Date();
 
         // 模型视图
 
@@ -31,11 +33,14 @@ public class DemoController {
         final ModelAndView modelAndView = new ModelAndView();
         // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
         modelAndView.addObject("datetime", datetime);
+        modelAndView.addObject("date", date);
 
         // 视图信息
         // 封装跳转的页面的信息
-//        modelAndView.setViewName("/WEB-INF/jsp/success.jsp");
-        modelAndView.setViewName("/WEB-INF/jsp/success.jsp");
+        // 物理视图名
+        // modelAndView.setViewName("/jsp/success.jsp");
+        // 逻辑视图名
+        modelAndView.setViewName("success");
 
         return modelAndView;
     }

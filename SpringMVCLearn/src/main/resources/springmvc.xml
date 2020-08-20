@@ -1,1 +1,50 @@
-<s
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+">
+    
+    <!-- 开启controller注解扫描 -->
+    <context:component-scan base-package="ankang.springmvc.learn.controller"/>
+    
+    <!--
+        配置mvc注解驱动：
+            处理器映射器，处理器适配器
+            处理器映射器，处理器适配器都有默认值，
+            但建议引入自动注册最合适处理器映射器，处理器适配器。
+    -->
+    <mvc:annotation-driven/>
+    
+    <!--
+        静态资源配置，方案一：
+            添加该标签之后，会在SpringMvc上下文中定义一个DefaultServletHttpRequestHandler对象。
+            该对象会对进入DispatcherServlet的url请求进行过滤筛查，
+            如果发现是静态资源请求，那么会将请求转由web应用服务器（Tomcat）默认的DefaultServlet来处理
+            如果发现不是静态资源请求，那么继续由SpringMVC框架处理
+       缺点：
+            不能将静态资源放到resources目录和WEB-INF目录下
+    -->
+<!--    <mvc:default-servlet-handler/>-->
+    
+    <!--
+        静态资源配置，方案二：
+            SpringMVC框架自己处理静态资源
+            mapping：静态资源映射url
+            location：静态资源存放位置
+    -->
+    <mvc:resources mapping="/resources/**" location="classpath:/"/>
+    
+    <!-- 配置SpringMVC视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <constructor-arg name="prefix" value="/jsp/"/>
+        <constructor-arg name="suffix" value=".jsp"/>
+    </bean>
+</beans>

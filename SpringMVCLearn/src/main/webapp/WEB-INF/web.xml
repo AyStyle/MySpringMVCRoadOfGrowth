@@ -9,20 +9,42 @@
     <servlet>
         <!-- servlet的名称 -->
         <servlet-name>springmvc</servlet-name>
-        <!-- servlet的类型 -->
+        <!-- servlet的类型：MVC前端控制器 -->
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springmvc.xml</param-value>
+        </init-param>
     </servlet>
     <!-- 配置servlet映射关系 -->
     <servlet-mapping>
         <!-- servlet的名称 -->
         <servlet-name>springmvc</servlet-name>
         <!--
+            拦截匹配到的url请求，进入springmvc框架处理
             servlet拦截url配置：
                 方式一：带后缀，比如：*.action，*.do
-                方式二：/，REST风格，不拦截jsp
-                方式三：/*，拦截所有，包括拦截jsp
+                        该种方式比较精确、方便，在以前和现在企业中都有很大的使用比例
+                方式二：/，REST风格，不拦截.jsp，但是会拦截.html等静态资源（静态资源：除了servlet和jsp之外，js、css、png、html等）
+                        为什么会拦截静态资源：
+                            因为Tomcat容器中有一个web.xml（父），而项目中也有一个web.xml（子），是继承关系。
+                            在父web.xml中有一个DefaultServlet，url-pattern是一个 / ，而子web.xml中也配置了一个 / ，
+                            子servlet不会拦截静态资源，但父servlet（DefaultServlet）会拦截静态资源，
+                            此时拦截下来的请求交给了子servlet来处理，而子servlet处理不了静态资源，所以响应为404错误
+                            
+                        为什么不拦截.jsp资源：
+                            因为父web.xml中有一个JspServlet，JspServlet会拦截.jsp文件，而子web.xml没有覆写这个配置，
+                            所以SpringMVC此时不会拦截.jsp，此时.jsp交给了Tomcat处理，页面正常响应
+                            
+                        解决 / 拦截静态资源的方案：
+                            方案一：
+                                在springmvc.xml中添加 <mvc:default-servlet-handler/>
+                                缺点：不能将静态资源放到resources目录和WEB-INF目录下
+                            方案二：
+                                在springmvc.xml中添加 <mvc:resources mapping="xxx" location="xxx"/>
+                方式三：/*，拦截所有，包括拦截.jsp（拦截以后，则：不会响应给用户了）
         -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
+    
 </web-app>
