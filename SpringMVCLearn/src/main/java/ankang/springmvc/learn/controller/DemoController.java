@@ -4,7 +4,9 @@ import ankang.springmvc.learn.pojo.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -205,13 +207,148 @@ public class DemoController {
     /**
      * 测试用例：SpringMVC接收日期类型参数
      * 定义一个SpringMVC的类型转换器：
-     *     转换器就是一个接口: {@link org.springframework.core.convert.converter.Converter}
+     * 转换器就是一个接口: {@link org.springframework.core.convert.converter.Converter}
      * http://localhost:8080/demo/handle06?birthday=2020-10-01
      */
     @RequestMapping("/handle06")
     public ModelAndView handle06(Date birthday) {
         System.out.println(birthday);
 
+        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+        final Date date = new Date();
+
+        // 模型视图
+
+        // 模型信息
+        // 封装了数据和页面信息
+        final ModelAndView modelAndView = new ModelAndView();
+        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
+        modelAndView.addObject("datetime" , datetime);
+        modelAndView.addObject("date" , date);
+
+        // 视图信息
+        // 封装跳转的页面的信息
+        // 物理视图名
+        // modelAndView.setViewName("/jsp/success.jsp");
+        // 逻辑视图名
+        modelAndView.setViewName("success");
+
+        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
+
+        return modelAndView;
+    }
+
+    /**
+     * 测试用例：SpringMVC对Restful风格url的支持
+     * GET：获取资源
+     *
+     * @PathVariable：解析RESTful风格url中的参数 http://localhost:8080/demo/handle/{id}
+     */
+    @RequestMapping(value = "/handle/{id}", method = RequestMethod.GET)
+    public ModelAndView handleGet(@PathVariable("id") Integer id) {
+        System.out.println(id)
+        ;
+        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+        final Date date = new Date();
+
+        // 模型视图
+
+        // 模型信息
+        // 封装了数据和页面信息
+        final ModelAndView modelAndView = new ModelAndView();
+        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
+        modelAndView.addObject("datetime" , datetime);
+        modelAndView.addObject("date" , date);
+
+        // 视图信息
+        // 封装跳转的页面的信息
+        // 物理视图名
+        // modelAndView.setViewName("/jsp/success.jsp");
+        // 逻辑视图名
+        modelAndView.setViewName("success");
+
+        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
+
+        return modelAndView;
+    }
+
+    /**
+     * 测试用例：SpringMVC对Restful风格url的支持
+     * POST：添加资源
+     * http://localhost:8080/demo/handle
+     */
+    @RequestMapping(value = "/handle", method = RequestMethod.POST)
+    public ModelAndView handlePost(@RequestParam("username") String username) {
+        System.out.println(username)
+        ;
+        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+        final Date date = new Date();
+
+        // 模型视图
+
+        // 模型信息
+        // 封装了数据和页面信息
+        final ModelAndView modelAndView = new ModelAndView();
+        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
+        modelAndView.addObject("datetime" , datetime);
+        modelAndView.addObject("date" , date);
+
+        // 视图信息
+        // 封装跳转的页面的信息
+        // 物理视图名
+        // modelAndView.setViewName("/jsp/success.jsp");
+        // 逻辑视图名
+        modelAndView.setViewName("success");
+
+        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
+
+        return modelAndView;
+    }
+
+    /**
+     * 测试用例：SpringMVC对Restful风格url的支持
+     * PUT：更新资源
+     * http://localhost:8080/demo/handle/{id}/{name}
+     */
+    @RequestMapping(value = "/handle/{id}/{name}", method = RequestMethod.PUT)
+    public ModelAndView handlePut(@PathVariable("id") Integer id , @PathVariable("name") String name) {
+        System.out.println(id);
+        System.out.println(name);
+        ;
+        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+        final Date date = new Date();
+
+        // 模型视图
+
+        // 模型信息
+        // 封装了数据和页面信息
+        final ModelAndView modelAndView = new ModelAndView();
+        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
+        modelAndView.addObject("datetime" , datetime);
+        modelAndView.addObject("date" , date);
+
+        // 视图信息
+        // 封装跳转的页面的信息
+        // 物理视图名
+        // modelAndView.setViewName("/jsp/success.jsp");
+        // 逻辑视图名
+        modelAndView.setViewName("success");
+
+        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
+
+        return modelAndView;
+    }
+
+    /**
+     * 测试用例：SpringMVC对Restful风格url的支持
+     * DELETE：删除资源
+     * http://localhost:8080/demo/handle/{id}
+     */
+    @RequestMapping(value = "/handle/{id}", method = RequestMethod.DELETE)
+    public ModelAndView handleDelete(@PathVariable("id") Integer id) {
+        System.out.println("this is delete method");
+        System.out.println(id);
+        ;
         final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
         final Date date = new Date();
 

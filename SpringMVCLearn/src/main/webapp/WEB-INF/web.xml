@@ -5,6 +5,33 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
     
+    <!-- 配置编码过滤器，防止乱码 -->
+    <filter>
+        <filter-name>encoding</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!--
+        配置SpringMVC请求方式转换过滤器：
+        会检查请求参数中是否有_method参数，如果有就按照指定的请求方式进行转换
+     -->
+    <filter>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <!-- 配置servlet -->
     <servlet>
         <!-- servlet的名称 -->
@@ -46,5 +73,5 @@
         -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    
+
 </web-app>
