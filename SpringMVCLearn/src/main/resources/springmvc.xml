@@ -21,8 +21,18 @@
             处理器映射器，处理器适配器都有默认值，
             但建议引入自动注册最合适处理器映射器，处理器适配器。
     -->
-    <mvc:annotation-driven/>
+    <!-- 绑定自定义类型转换器 -->
+    <mvc:annotation-driven conversion-service="conversionServiceFactoryBean"/>
     
+    <!-- 注册自定义的SpringMVC类型转换器 -->
+    <bean id="conversionServiceFactoryBean" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!-- conversions存放自定义的类型转换器 -->
+        <property name="converters">
+            <set>
+                <bean class="ankang.springmvc.learn.converter.DateConverter"/>
+            </set>
+        </property>
+    </bean>
     <!--
         静态资源配置，方案一：
             添加该标签之后，会在SpringMvc上下文中定义一个DefaultServletHttpRequestHandler对象。
