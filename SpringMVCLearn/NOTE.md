@@ -144,7 +144,9 @@ Spring MVC可以认为是Servlet的封装，简化了我们servlet的开发
   DELETE：删除资源
   ```
    
-   
+#### Ajax Json交互
+1. 前端到后台：前端ajax发送json格式字符串，后台直接接收为pojo参数，使用注解@RequestBody
+2. 后台到前端：后台直接返回pojo对象，前端直接接收为json对象或者字符串，使用注解@ResponseBody
    
    
    

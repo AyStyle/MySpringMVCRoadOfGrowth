@@ -14,7 +14,7 @@
                 $.ajax({
                     url: '/demo/handle07',
                     type: 'POST',
-                    data: '{"id":"1","name":"李四"}',
+                    data: '{"name":"ankang","age":18}',
                     contentType: 'application/json;charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
