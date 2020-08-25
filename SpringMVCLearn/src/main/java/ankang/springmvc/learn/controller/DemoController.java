@@ -235,37 +235,53 @@ public class DemoController {
         return modelAndView;
     }
 
+//    /**
+//     * 测试用例：Ajax Json交互（前端请求后台Request）
+//     * 注意：这里虽然写的是get请求，但是要用post来提交请求
+//     * http://localhost:8080/demo/handle07?name=ankang&age=18
+//     */
+//    @RequestMapping("/handle07")
+//    public ModelAndView handle07(@RequestBody User user) {
+//        System.out.println(user);
+//
+//        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
+//        final Date date = new Date();
+//
+//        // 模型视图
+//
+//        // 模型信息
+//        // 封装了数据和页面信息
+//        final ModelAndView modelAndView = new ModelAndView();
+//        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
+//        modelAndView.addObject("datetime" , datetime);
+//        modelAndView.addObject("date" , date);
+//
+//        // 视图信息
+//        // 封装跳转的页面的信息
+//        // 物理视图名
+//        // modelAndView.setViewName("/jsp/success.jsp");
+//        // 逻辑视图名
+//        modelAndView.setViewName("success");
+//
+//        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
+//
+//        return modelAndView;
+//    }
+
     /**
-     * 测试用例：Ajax Json交互
+     * 测试用例：Ajax Json交互（后台请求前台Response）
      * 注意：这里虽然写的是get请求，但是要用post来提交请求
      * http://localhost:8080/demo/handle07?name=ankang&age=18
      */
     @RequestMapping("/handle07")
-    public ModelAndView handle07(@RequestBody User user) {
+    // @ResponseBody：添加@ResponseBody之后，不再走视图解析器那个流程，而是等同于response直接输出数据
+    @ResponseBody
+    public User handle07(@RequestBody User user) {
         System.out.println(user);
 
-        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
-        final Date date = new Date();
+        user.setName(user.getName().toUpperCase());
 
-        // 模型视图
-
-        // 模型信息
-        // 封装了数据和页面信息
-        final ModelAndView modelAndView = new ModelAndView();
-        // addObject向请求域中添加信息与request.setAttribute("datetime", datetime)一样
-        modelAndView.addObject("datetime" , datetime);
-        modelAndView.addObject("date" , date);
-
-        // 视图信息
-        // 封装跳转的页面的信息
-        // 物理视图名
-        // modelAndView.setViewName("/jsp/success.jsp");
-        // 逻辑视图名
-        modelAndView.setViewName("success");
-
-        System.out.println("=========>modelMap: " + modelAndView + ", class: " + modelAndView.getClass());
-
-        return modelAndView;
+        return user;
     }
 
     /**

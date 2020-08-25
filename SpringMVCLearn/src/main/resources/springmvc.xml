@@ -51,7 +51,7 @@
             location：静态资源存放位置
     -->
     <mvc:resources mapping="/resources/**" location="classpath:/"/>
-    <mvc:resources mapping="/js/**" location="/WEB-INF/js"/>
+    <mvc:resources mapping="/js/**" location="/WEB-INF/js/"/>
     
     <!-- 配置SpringMVC视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
