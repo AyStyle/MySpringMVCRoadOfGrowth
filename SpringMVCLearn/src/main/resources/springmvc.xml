@@ -42,7 +42,7 @@
        缺点：
             不能将静态资源放到resources目录和WEB-INF目录下
     -->
-<!--    <mvc:default-servlet-handler/>-->
+    <!--    <mvc:default-servlet-handler/>-->
     
     <!--
         静态资源配置，方案二：
@@ -58,4 +58,41 @@
         <constructor-arg name="prefix" value="/jsp/"/>
         <constructor-arg name="suffix" value=".jsp"/>
     </bean>
+    
+    <!--
+        注册拦截器：
+            拦截器是SpringMVC、Struts等表现层框架自己的，不会拦截Request的访问资源，只会拦截访问的控制器方法
+      
+            在Handler业务逻辑执行之前拦截一次
+            在Handler逻辑执行完毕，但未跳转页面之前拦截一次
+            在跳转页面之后拦截一次
+    -->
+    <mvc:interceptors>
+        <!-- 默认拦截所有的handler -->
+        <!--        <bean class="ankang.springmvc.learn.interceptor.MyInterceptor01"/>-->
+        
+        <!-- 按配置拦截 -->
+        <mvc:interceptor>
+            <!--
+                配置拦截url的规则：
+                    **代表递归子目录
+             -->
+            <mvc:mapping path="/**"/>
+            <!-- 在mvc:mapping的基础上，配置排除url的规则（不拦截的url） -->
+            <!--            <mvc:exclude-mapping path="/demo/**"/>-->
+            <bean class="ankang.springmvc.learn.interceptor.MyInterceptor01"/>
+        </mvc:interceptor>
+        
+        <!--
+            多个拦截器，方法执行顺序：
+                preHandle：按照mvc:interceptor配置顺序执行
+                postHandle：按照mvc:interceptor配置倒序执行
+                afterCompletion：按照mvc:interceptor配置倒序执行
+         -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <!--            <mvc:exclude-mapping path="/demo/**"/>-->
+            <bean class="ankang.springmvc.learn.interceptor.MyInterceptor02"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
