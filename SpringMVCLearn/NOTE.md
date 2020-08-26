@@ -148,9 +148,31 @@ Spring MVC可以认为是Servlet的封装，简化了我们servlet的开发
 1. 前端到后台：前端ajax发送json格式字符串，后台直接接收为pojo参数，使用注解@RequestBody
 2. 后台到前端：后台直接返回pojo对象，前端直接接收为json对象或者字符串，使用注解@ResponseBody
    
-   
-   
-   
+#### Servlet、监听器、过滤器、拦截器
++ Servlet(web.xml):
+  ```
+  处理Request请求和Response响应
+  ```
++ 过滤器（Filter）(web.xml):
+  ```
+  对Request请求起到过滤的作用，作用在Servlet之前，如果配置为/*可以对所有的资源进行过滤
+  ```
++ 监听器（Listener）(web.xml):
+  ```
+  实现了javax.servlet.ServletContextListener接口的服务器端的组件，它随Web应用的启动而启动，
+  只初始化一次，然后会一直运行监视，随着Web应用的停止而销毁
+  
+  作用一：做一些初始化工作，web应用中spring容器启动ContextLoaderListener
+  作用二：监听web中的特定事件，可以在某些动作前后增加处理，实现监控。
+  ```
++ 拦截器（Interceptor）(springmvc.xml):
+  ```
+  拦截器是SpringMVC、Struts等表现层框架自己的，不会拦截Request的访问资源，只会拦截访问的控制器方法
+  
+  在Handler业务逻辑执行之前拦截一次
+  在Handler逻辑执行完毕，但未跳转页面之前拦截一次
+  在跳转页面之后拦截一次
+  ```
    
    
    
