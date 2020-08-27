@@ -5,17 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: ankang
@@ -282,6 +285,37 @@ public class DemoController {
         user.setName(user.getName().toUpperCase());
 
         return user;
+    }
+
+    /**
+     * 测试用例：文件上传
+     * http://localhost:8080/demo/upload
+     */
+    @RequestMapping("/upload")
+    public ModelAndView upload(MultipartFile uploadFile , HttpSession session) throws IOException {
+        // 处理上传文件
+
+        // 获取原始文件名称
+        final String originalFilename = uploadFile.getOriginalFilename();
+        // 文件扩展名: .txt
+        final String fileSuffix = originalFilename.substring(originalFilename.lastIndexOf('.'));
+        final String fileName = UUID.randomUUID().toString() + fileSuffix;
+
+        // 存储
+        // 返回相对于磁盘的真是路径
+        final String realPath = session.getServletContext().getRealPath("/uploads");
+        final String date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        final File dir = new File(realPath + "/" + date);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        final File file = new File(dir , fileName);
+        uploadFile.transferTo(file);
+
+        final ModelAndView success = new ModelAndView("success");
+        return success;
     }
 
     /**

@@ -95,4 +95,10 @@
             <bean class="ankang.springmvc.learn.interceptor.MyInterceptor02"/>
         </mvc:interceptor>
     </mvc:interceptors>
+    
+    <!-- 配置多元素解析器：用于上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置文件最大限制，默认：不限制，单位：byte -->
+        <property name="maxUploadSize" value="500000"/>
+    </bean>
 </beans>
