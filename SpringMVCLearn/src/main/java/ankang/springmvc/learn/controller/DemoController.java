@@ -7,6 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +35,9 @@ public class DemoController {
      * http://localhost:8080/demo/handle01
      */
     @RequestMapping("/handle01")
-    public ModelAndView handle01() {
+    public ModelAndView handle01(@ModelAttribute("name") String name) {
+        System.out.println("this is handle01 param: " + name);
+
         final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T' , ' ');
         final Date date = new Date();
 
@@ -525,7 +528,7 @@ public class DemoController {
      */
     @RequestMapping("/exception")
     public void exception() {
-       int a = 1 /0;
+        int a = 1 / 0;
     }
 
 //    /**
@@ -544,4 +547,24 @@ public class DemoController {
 //        // 可以返回其他页面也可以不返回
 //    }
 
+
+    /**
+     * SpringMVC 重定向时参数与传递问题
+     * 转发：A找B借钱，B没有钱但是B找到C借钱，然后将借到钱给A
+     * url不会变，参数也不会丢失，是一个请求
+     * 重定向：A找B借钱，B没有钱但是B告诉A说：C有钱你找他借
+     * url会变，参数会丢失需要重新携带参数，是两个请求
+     */
+    @RequestMapping("/handleRedirect")
+    public String handleRedirect(@RequestParam("name") String name , RedirectAttributes redirectAttributes) {
+        System.out.println("this is redirect param: " + name);
+
+        // 使用拼接参数的方式传递参数，但是安全性和参数长度都有限制
+        // return "redirect:handle01?name=" + name;
+
+        // 使用flash属性传递参数
+        // 使用addFlashAttribute方法设置了一个flash类型属性，该属性会被暂存到session中，在跳转到页面之后该属性销毁
+        redirectAttributes.addFlashAttribute("name" , name);
+        return "redirect:handle01";
+    }
 }
