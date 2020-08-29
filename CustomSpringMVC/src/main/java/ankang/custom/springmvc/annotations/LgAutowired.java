@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @create: 2020-08-29
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LgAutowired {
     String value() default "";
