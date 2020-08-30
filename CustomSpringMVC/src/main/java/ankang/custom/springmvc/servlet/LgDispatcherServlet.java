@@ -1,7 +1,10 @@
 package ankang.custom.springmvc.servlet;
 
+import ankang.custom.springmvc.annotations.LgAutowired;
 import ankang.custom.springmvc.annotations.LgController;
+import ankang.custom.springmvc.annotations.LgRequestMapping;
 import ankang.custom.springmvc.annotations.LgService;
+import ankang.custom.springmvc.handler.Handler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author: ankang
@@ -37,6 +43,11 @@ public class LgDispatcherServlet extends HttpServlet {
     private Map<String, Object> ioc = new HashMap<>();
 
     /**
+     * handler
+     */
+    private List<Handler> handlerMapping = new ArrayList<>();
+
+    /**
      * 接受处理请求
      *
      * @param req
@@ -59,7 +70,33 @@ public class LgDispatcherServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req , HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req , resp);
+        // 获取处理的handler
+        final Handler handler = getHandler(req);
+
+        if (handler == null) {
+            resp.getWriter().write("404 not found");
+        } else {
+            try {
+                handler.handle(req , resp);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    private Handler getHandler(HttpServletRequest req) {
+        final String uri = req.getRequestURI();
+        for (Handler handler : handlerMapping) {
+            // url和handler匹配，则：返回
+            if (handler.getPattern().matcher(uri).find()) {
+                return handler;
+            }
+        }
+        return null;
     }
 
     /**
@@ -96,12 +133,50 @@ public class LgDispatcherServlet extends HttpServlet {
      * 5.初始化SpringMVC相关组件：构造一个HandlerMapping处理器映射器，将配置好的url和Method建立映射关系
      */
     private void initHandlerMapping() {
+        ioc.forEach((beanId , bean) -> {
+            final Class<?> cls = bean.getClass();
+            if (cls.isAnnotationPresent(LgController.class)) {
+                // 获取class上@LgRequestMapping中的url
+                final String baseUrl = cls.isAnnotationPresent(LgRequestMapping.class) ? cls.getDeclaredAnnotation(LgRequestMapping.class).value() : "";
+
+                final Method[] methods = cls.getDeclaredMethods();
+                for (Method method : methods) {
+                    // 获取方法中的url，方法有@LgRequestMapping注解才处理
+                    if (method.isAnnotationPresent(LgRequestMapping.class)) {
+                        final String tailUrl = method.getDeclaredAnnotation(LgRequestMapping.class).value();
+
+                        // 请求的完整url
+                        final String url = baseUrl + tailUrl;
+                        final Handler handler = new Handler(bean , method , Pattern.compile(url));
+                        handlerMapping.add(handler);
+                    }
+                }
+            }
+        });
     }
 
     /**
      * 4.实现依赖注入
      */
     private void doAutowired() {
+        // 遍历ioc中的所有对象，查看对象中的字段，是否有@LgAutowired注解，如果有需要维护依赖注入关系
+        ioc.forEach((beanId , bean) -> {
+            final Field[] fields = bean.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(LgAutowired.class)) {
+                    final LgAutowired annotation = field.getAnnotation(LgAutowired.class);
+                    // 获取beanId，如果value没有值，按照接口类型注入
+                    final String autowiredBeanId = "".equals(annotation.value()) ? field.getType().getCanonicalName() : annotation.value();
+                    try {
+                        field.set(bean , ioc.get(autowiredBeanId));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
     /**
@@ -144,11 +219,10 @@ public class LgDispatcherServlet extends HttpServlet {
                     e.printStackTrace();
                 }
 
-
                 // service层往往是有接口的，面向接口开发，所以再以接口名为id放入一份对象到ioc中，便于后期根据接口类型注入
                 final Class<?>[] interfaces = cls.getInterfaces();
                 for (Class<?> inter : interfaces) {
-                    final String interfaceName = inter.getSimpleName();
+                    final String interfaceName = inter.getCanonicalName();
                     ioc.put(interfaceName , bean);
                 }
             }

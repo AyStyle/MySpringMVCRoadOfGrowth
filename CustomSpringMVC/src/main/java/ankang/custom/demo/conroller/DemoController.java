@@ -20,7 +20,8 @@ public class DemoController {
     @LgAutowired
     private DemoService demoService;
 
-    private String query(HttpServletRequest request , HttpServletResponse response , String name) {
+    @LgRequestMapping("/query")
+    public String query(HttpServletRequest request , HttpServletResponse response , String name) {
         return demoService.get(name);
     }
 

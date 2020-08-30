@@ -8,7 +8,7 @@
        <servlet-class>ankang.custom.springmvc.servlet.LgDispatcherServlet</servlet-class>
        <init-param>
            <param-name>contextConfigLocation</param-name>
-           <param-value>classpath:springmvc.properties</param-value>
+           <param-value>springmvc.properties</param-value>
        </init-param>
    </servlet>
    <servlet-mapping>
