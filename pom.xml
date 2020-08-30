@@ -10,6 +10,7 @@
     <modules>
         <module>SpringMVCLearn</module>
         <module>CustomSpringMVC</module>
+        <module>SSM</module>
     </modules>
     
     <packaging>pom</packaging>
