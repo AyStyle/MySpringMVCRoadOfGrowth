@@ -11,6 +11,7 @@
         <module>SpringMVCLearn</module>
         <module>CustomSpringMVC</module>
         <module>SSM</module>
+        <module>JPA</module>
     </modules>
     
     <packaging>pom</packaging>
