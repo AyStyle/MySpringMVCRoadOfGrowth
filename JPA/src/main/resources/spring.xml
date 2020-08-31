@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/data/jpa
+       https://www.springframework.org/schema/data/spring-jpa.xsd
+">
+    
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    
+    <!-- 对Spring和SpringJPA进行配置 -->
+    
+    <!-- 1.创建数据库连接池 -->
+    <!-- 数据库连接池交给Spring管理 -->
+    <bean id="datasource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <!--
+        2.配置一个JPA中非常重要的对象，EntityManagerFactory
+        类似于Mybatis中SqlSessionFactory
+    -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- 配置细节 -->
+        
+        <!-- 配置数据源 -->
+        <property name="dataSource" ref="datasource"/>
+        
+        <!-- 配置Pojo包扫描 -->
+        <property name="packagesToScan" value="ankang.jpa.pojo"/>
+        
+        <!-- 指定jpa具体实现 -->
+        <property name="persistenceProvider">
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        </property>
+        
+        <!--
+            jpa方言配置
+            不同的JPA方言实现对于类似于beginTransaction等细节的实现是不一样的，所以传入JpaDialect具体的实现类
+        -->
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+        </property>
+        
+        
+        <!-- 配置具体provider，hibernate框架的执行细节 -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <!-- 定义hibernate框架的一些细节 -->
+                <!--
+                    配置数据表是否自动创建：
+                    程序启动时，如果数据表还没有创建，是否要程序自动创建
+                -->
+                <property name="generateDdl" value="false"/>
+                
+                <!--
+                    配置数据库类型：
+                    Hibernate本身是个DAO层框架，可以支持多种数据库类型
+                -->
+                <property name="database" value="MYSQL"/>
+                
+                <!--
+                    配置数据库的方言：
+                    hibernate可以自动拼装生成的SQL语句，但不同的数据库SQL语法是不同的，所以需要我们注入具体的数据库方言
+                -->
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
+                
+                <!--
+                    是否显示SQL：
+                    操作数据库时，是否打印SQL
+                -->
+                <property name="showSql" value="true"/>
+            
+            </bean>
+        </property>
+    </bean>
+    
+    <!--
+        3.引用上面创建的EntityManagerFactory
+        配置jpa的dao层细节
+        base-package：指定dao层接口所在包
+    -->
+    <jpa:repositories base-package="ankang.jpa.pojo" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref=""/>
+    
+    <!--
+        4.事务管理器配置
+        JDBC和Mybatis使用的是DataSourceTransactionManager
+        JPA使用的是JpaTransactionManager
+    -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    
+    <!-- 5.声明式事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <!-- 6.配置Spring包扫描 -->
+    <context:component-scan base-package="ankang.jpa"/>
+    
+</beans>
