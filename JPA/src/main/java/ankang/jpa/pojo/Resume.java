@@ -23,7 +23,7 @@ public class Resume {
      * GenerationType.SEQUENCE -> 依赖序列来产生主键：Oracle
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "address")
