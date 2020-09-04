@@ -78,9 +78,7 @@ public class LgDispatcherServlet extends HttpServlet {
         } else {
             try {
                 handler.handle(req , resp);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

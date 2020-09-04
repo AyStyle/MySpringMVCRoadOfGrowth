@@ -1,15 +1,17 @@
 package ankang.custom.springmvc.handler;
 
+import ankang.custom.springmvc.annotations.Security;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author: ankang
@@ -47,7 +49,12 @@ public class Handler {
         init();
     }
 
-    public Object handle(HttpServletRequest req , HttpServletResponse resp) throws InvocationTargetException, IllegalAccessException {
+    public Object handle(HttpServletRequest req , HttpServletResponse resp) throws Exception {
+        if (!authority(req)) {
+            resp.getWriter().println("404, no auth");
+            return null;
+        }
+
         final Object[] args = new Object[paramIndexMap.size()];
 
         // 向参数数组中塞值，而且还得保证参数的顺序和方法中形参顺序一致
@@ -75,8 +82,41 @@ public class Handler {
         if (index != null) {
             args[index] = resp;
         }
-       return method.invoke(controller , args);
+
+        // 调用handler方法
+        return method.invoke(controller , args);
     }
+
+    /**
+     * 实现权限校验的功能
+     *
+     * @return 有权限返回true，没有权限返回false
+     */
+    private boolean authority(HttpServletRequest req) {
+        // 没有@Security注解，则：有权限访问
+        if (!method.isAnnotationPresent(Security.class) && !method.getDeclaringClass().isAnnotationPresent(Security.class)) {
+            return true;
+        }
+
+        // 获取访问者
+        final String[] usernames = req.getParameterValues("username");
+
+        // usernames的个数只有一个时，才能进行权限校验，否则都是没有权限
+        if (Objects.isNull(usernames) && usernames.length != 1) {
+            return false;
+        }
+
+        // 获取有权限访问的人
+        final Security methodAnnotation = method.getAnnotation(Security.class);
+        final Security classAnnotation = method.getDeclaringClass().getAnnotation(Security.class);
+        final List<String> authorities = Stream.of(methodAnnotation , classAnnotation).filter(Objects::nonNull).map(Security::value)
+                .flatMap(Arrays::stream).filter(authority -> Objects.nonNull(authority) && !authority.isBlank())
+                .collect(Collectors.toList());
+
+        // 如果usernames在authorities里面，说明有权限访问
+        return authorities.contains(usernames[0]);
+    }
+
 
     private void init() {
         // 计算方法的参数位置
