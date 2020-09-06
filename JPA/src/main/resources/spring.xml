@@ -87,14 +87,7 @@
     </bean>
     
     <!--
-        3.引用上面创建的EntityManagerFactory
-        配置jpa的dao层细节
-        base-package：指定dao层接口所在包
-    -->
-    <jpa:repositories base-package="ankang.jpa.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"/>
-    
-    <!--
-        4.事务管理器配置
+        3.事务管理器配置
         JDBC和Mybatis使用的是DataSourceTransactionManager
         JPA使用的是JpaTransactionManager
     -->
@@ -102,10 +95,17 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
     
-    <!-- 5.声明式事务 -->
-<!--    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+    <!-- 4.声明式事务 -->
+    <!--    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+    
+    <!--
+        5.引用上面创建的EntityManagerFactory
+        配置jpa的dao层细节
+        base-package：指定dao层接口所在包
+    -->
+    <jpa:repositories base-package="ankang.jpa.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"/>
     
     <!-- 6.配置Spring包扫描 -->
     <context:component-scan base-package="ankang.jpa"/>
-    
+
 </beans>
