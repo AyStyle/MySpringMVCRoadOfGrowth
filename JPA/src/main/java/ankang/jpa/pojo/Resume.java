@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 // 1.@Entity和@Table注解表明实体类和数据表之间的映射关系
 @Entity
-@Table(name = "db_spring.resume")
+@Table(name = "db_spring.tb_resume")
 // 2.实体类属性和表字段的映射关系
 // @Id：标识主键
 // @GeneratedValue：标识主键的生成策略
