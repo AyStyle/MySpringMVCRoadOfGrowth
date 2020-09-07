@@ -16,8 +16,8 @@
     
     <mvc:annotation-driven/>
     
-    <mvc:resources mapping="/**" location="html"/>
-    <mvc:resources mapping="/**" location="css"/>
+    <mvc:resources mapping="/html/**" location="html/"/>
+    <mvc:resources mapping="/**" location="css/"/>
     
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <constructor-arg name="prefix" value="/resume/"/>
