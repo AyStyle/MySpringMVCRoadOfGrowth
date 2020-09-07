@@ -12,8 +12,38 @@
         <module>CustomSpringMVC</module>
         <module>SSM</module>
         <module>JPA</module>
+        <module>HomeWork</module>
     </modules>
     
     <packaging>pom</packaging>
-
+    
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <path>/</path>
+                        <port>8080</port>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
