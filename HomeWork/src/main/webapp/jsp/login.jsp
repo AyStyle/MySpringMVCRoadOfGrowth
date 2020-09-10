@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="../css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/login.css"/>
 </head>
 <body>
 <div id="login">
@@ -17,9 +18,9 @@
                               post   sucess.html
                 onsubmit    return 语句;     若返回值为true或者 ""  均可以提交
     -->
-    <form action="/login" method="post">
-        <input id="username" type="text" required="required" placeholder="用户名"/>
-        <input id="password" type="password" required="required" placeholder="密码"/>
+    <form action="/resume/login" method="post">
+        <input name="username" type="text" required="required" placeholder="用户名"/>
+        <input name="password" type="password" required="required" placeholder="密码"/>
         <button class="but" type="submit">登录</button>
     </form>
 </div>

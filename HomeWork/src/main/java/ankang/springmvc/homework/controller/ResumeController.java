@@ -16,6 +16,7 @@ import java.util.List;
  * @create: 2020-09-06
  */
 @Controller
+@RequestMapping("/resume")
 public class ResumeController {
 
     @Autowired
@@ -30,13 +31,16 @@ public class ResumeController {
     public ModelAndView login(@RequestParam("username") String username , @RequestParam("password") String password , HttpSession session) {
         final ModelAndView modelAndView = new ModelAndView();
 
+        System.out.println(username);
+        System.out.println(password);
+
         if ("admin".equals(username) && "admin".equals(password)) {
             session.setAttribute("isAuth" , true);
-            modelAndView.setViewName("list");
+            modelAndView.setViewName("/jsp/list.jsp");
         } else {
             session.setAttribute("isAuth" , false);
             modelAndView.addObject("msg" , "用户名或密码错误，请重新登录！");
-            modelAndView.setViewName("login");
+            modelAndView.setViewName("/jsp/login.jsp");
         }
 
         return modelAndView;
@@ -50,7 +54,7 @@ public class ResumeController {
     @RequestMapping("/list")
     public ModelAndView list() {
         final ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("list");
+        modelAndView.setViewName("/jsp/list.jsp");
 
         return modelAndView;
     }

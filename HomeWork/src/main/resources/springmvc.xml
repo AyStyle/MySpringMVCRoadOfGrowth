@@ -16,12 +16,11 @@
     
     <mvc:annotation-driven/>
     
-    <mvc:resources mapping="/html/**" location="html/"/>
-    <mvc:resources mapping="/**" location="css/"/>
+    <mvc:default-servlet-handler/>
     
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <constructor-arg name="prefix" value="/resume/"/>
-        <constructor-arg name="suffix" value=".html"/>
+        <constructor-arg name="prefix" value="/jsp/"/>
+        <constructor-arg name="suffix" value=".jsp"/>
     </bean>
     
     <mvc:interceptors>

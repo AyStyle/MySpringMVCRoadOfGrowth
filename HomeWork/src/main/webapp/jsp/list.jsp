@@ -1,5 +1,5 @@
 <DOCTYPE html/>
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
                     listElement(ajax.responseText);
                 }
             };
-            ajax.open("POST", "/queryAll", true);
+            ajax.open("POST", "/resume/queryAll", true);
             ajax.send();
         }
 
@@ -85,7 +85,7 @@
                     alert("添加失败！");
                 }
             };
-            ajax.open("POST", "/save", true);
+            ajax.open("POST", "/resume/save", true);
             ajax.setRequestHeader("Content-type", "application/json")
             ajax.send("{name:" + document.getElementById("create_name") + ",phone:" + document.getElementById("create_phone") + ",address:" + document.getElementById("create_address") + "}");
 
@@ -102,7 +102,7 @@
                     query(form[0].value, form);
                 }
             };
-            ajax.open("POST", "/save", true);
+            ajax.open("POST", "/resume/save", true);
             ajax.setRequestHeader("Content-type", "application/json")
             ajax.send("{id:" + form[0].value + ",name:" + form[1].value + ",phone:" + form[2].value + ",address:" + form[3].value + "}");
 
@@ -119,7 +119,7 @@
                     alert("删除失败！");
                 }
             };
-            ajax.open("POST", "/delete", true);
+            ajax.open("POST", "/resume/delete", true);
             ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
             ajax.send("id=" + form[0].value);
 
@@ -139,7 +139,7 @@
                     alert("没有查到对应的内容, Id：" + id);
                 }
             };
-            ajax.open("POST", "/query", true);
+            ajax.open("POST", "/resume/query", true);
             ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
             ajax.send("id=" + id);
 
