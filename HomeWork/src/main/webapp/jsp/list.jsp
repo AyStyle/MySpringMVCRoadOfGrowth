@@ -6,7 +6,7 @@
     <title>Login</title>
     <script type="text/javascript">
         function load() {
-            let ajax = new XMLHttpRequest();
+            var ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     listElement(ajax.responseText);
@@ -17,55 +17,55 @@
         }
 
         function listElement(response) {
-            let tbody = document.getElementById("tbody");
+            var tbody = document.getElementById("tbody");
             // 先清空内容，然后在添加内容
             tbody.innerHTML = "";
 
-            let jsonArray = JSON.parse(response)
-            for (let jsonIndex in jsonArray) {
-                let form = createForm(jsonArray[jsonIndex]);
+            var jsonArray = JSON.parse(response)
+            for (var jsonIndex in jsonArray) {
+                var form = createForm(jsonArray[jsonIndex]);
 
                 tbody.appendChild(form);
             }
         }
 
         function createForm(data) {
-            let form = document.createElement("form");
+            var form = document.createElement("form");
             form.target = "_self";
             form.method = "post";
 
-            let id = document.createElement("input");
+            var id = document.createElement("input");
             id.readOnly = true;
             id.placeholder = "编号";
             id.type = "text";
             id.value = data.id;
             form.appendChild(id);
 
-            let name = document.createElement("input");
+            var name = document.createElement("input");
             name.placeholder = "姓名";
             name.type = "text";
             name.value = data.name;
             form.appendChild(name);
 
-            let phone = document.createElement("input");
+            var phone = document.createElement("input");
             phone.placeholder = "电话";
             phone.type = "text";
             phone.value = data.phone;
             form.appendChild(phone);
 
-            let address = document.createElement("input");
+            var address = document.createElement("input");
             address.placeholder = "地址";
             address.type = "text";
             address.value = data.address;
             form.appendChild(address);
 
-            let update = document.createElement("button");
+            var update = document.createElement("button");
             update.type = "submit";
             update.value = "更新";
             update.onclick = this.update(form);
             form.appendChild(update);
 
-            let deleted = document.createElement("button");
+            var deleted = document.createElement("button");
             deleted.type = "submit";
             deleted.value = "删除";
             deleted.onclick = this.deleted(form);
@@ -75,10 +75,10 @@
         }
 
         function create() {
-            let ajax = new XMLHttpRequest();
+            var ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let form = createForm(JSON.parse(this.responseText));
+                    var form = createForm(JSON.parse(this.responseText));
                     document.getElementById("tbody").appendChild(form);
                     alert("添加成功！");
                 }else{
@@ -86,14 +86,14 @@
                 }
             };
             ajax.open("POST", "/resume/save", true);
-            ajax.setRequestHeader("Content-type", "application/json")
-            ajax.send("{name:" + document.getElementById("create_name") + ",phone:" + document.getElementById("create_phone") + ",address:" + document.getElementById("create_address") + "}");
+            ajax.setRequestHeader("Content-type", "application/json");
+            ajax.send("{name:" + document.getElementById("create_name").value + ",phone:" + document.getElementById("create_phone").value + ",address:" + document.getElementById("create_address").value + "}");
 
             return false;
         }
 
         function update(form) {
-            let ajax = new XMLHttpRequest();
+            var ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     alert("更新成功！");
@@ -110,7 +110,7 @@
         }
 
         function deleted(form) {
-            let ajax = new XMLHttpRequest();
+            var ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     alert("删除成功！")
@@ -127,10 +127,10 @@
         }
 
         function query(id, form) {
-            let ajax = new XMLHttpRequest();
+            var ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let data = JSON.parse(this.responseText);
+                    var data = JSON.parse(this.responseText);
                     form[0].value = data.id;
                     form[1].value = data.name;
                     form[2].value = data.phone;
