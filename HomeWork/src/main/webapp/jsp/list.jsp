@@ -33,14 +33,22 @@
             let form = document.createElement("form");
             form.target = "_self";
             form.method = "post";
+            form.id = data.id;
+
+            let table = document.createElement("table");
+            form.appendChild(table);
+
+            let tbody = document.createElement("tbody");
+            table.appendChild(tbody);
 
             let tr = document.createElement("tr");
-            form.appendChild(tr);
+            tbody.appendChild(tr);
 
             let id = document.createElement("input");
             id.name = "id";
             id.readOnly = true;
-            id.placeholder = data.id;
+            id.placeholder = "编号";
+            id.value = data.id;
             id.type = "text";
             let td = document.createElement("td");
             td.appendChild(id);
@@ -48,7 +56,8 @@
 
             let name = document.createElement("input");
             name.name = "name";
-            name.placeholder = data.name;
+            name.placeholder = "姓名";
+            name.value = data.name;
             name.type = "text";
             td = document.createElement("td");
             td.appendChild(name);
@@ -56,7 +65,8 @@
 
             let phone = document.createElement("input");
             phone.name = "phone";
-            phone.placeholder = data.phone;
+            phone.placeholder = "电话";
+            phone.value = data.phone;
             phone.type = "text";
             td = document.createElement("td");
             td.appendChild(phone);
@@ -64,26 +74,19 @@
 
             let address = document.createElement("input");
             address.name = "address";
-            address.placeholder = data.address;
+            address.placeholder = "地址";
+            address.value = data.address;
             address.type = "text";
             td = document.createElement("td");
             td.appendChild(address);
             tr.appendChild(td);
 
-            let update = document.createElement("button");
-            update.type = "submit";
-            update.innerText = "更新";
-            update.onclick = "return this.update();";
             td = document.createElement("td");
-            td.appendChild(update);
+            td.innerHTML = "<button id = 'update_" + data.id + "' type='submit' onclick='return update();'>更新</button>";
             tr.appendChild(td);
 
-            let deleted = document.createElement("button");
-            deleted.type = "submit";
-            deleted.innerText = "删除";
-            deleted.onclick =  "return this.deleted();";
             td = document.createElement("td");
-            td.appendChild(deleted);
+            td.innerHTML = "<button id = 'delete_" + data.id + "' type='submit' onclick='return deleted();'>删除</button>";
             tr.appendChild(td);
 
             return form;
@@ -105,7 +108,11 @@
             return false;
         }
 
-        function update(form) {
+        function update() {
+            let event_id = event.target.id;
+            let id = event_id.replace("update_", "");
+            let form = document.getElementById(id);
+
             $.ajax({
                 url: "/resume/save",
                 async: true,
@@ -114,6 +121,7 @@
                 dataType: "json",
                 type: "POST",
                 success: function (result) {
+                    alert(result);
                     form.getElementsByName("name").value = result.name;
                     form.getElementsByName("phone").value = result.phone;
                     form.getElementsByName("address").value = result.address;
@@ -122,16 +130,18 @@
             return false;
         }
 
-        function deleted(form) {
+        function deleted() {
+            let event_id = event.target.id;
+            let id = event_id.replace("delete_", "");
             $.ajax({
-                url: "/resume/save",
+                url: "/resume/delete",
                 async: true,
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: "id=" + form.getElementsByName("id").value,
-                dataType: "json",
+                data: "id=" + id,
                 type: "POST",
-                success: function (result) {
-                    form.delete();
+                complete: function (xhr, status) {
+                    let child = document.getElementById(id);
+                    child.parentElement.removeChild(child);
                 }
             })
             return false;
@@ -155,17 +165,17 @@
 </head>
 
 <body onload="load()">
-<div>
-    <table cellpadding="0" cellspacing="0" border="0" bgcolor="#dcdcdc">
-        <thead>
-        <tr>
-            <th>编号</th>
-            <th>姓名</th>
-            <th>电话</th>
-            <th>地址</th>
-            <th colspan="2">操作</th>
-        </tr>
-        <form target="_self">
+<div id="thead">
+    <form target="_self">
+        <table>
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>地址</th>
+                <th colspan="2">操作</th>
+            </tr>
             <tr>
                 <td><input placeholder="编号" type="text" disabled="disabled"/></td>
                 <td><input id="create_name" placeholder="姓名" type="text" required="required"/></td>
@@ -178,12 +188,10 @@
                     <button type="reset">清空</button>
                 </td>
             </tr>
-        </form>
-        </thead>
-        <tbody id="tbody">
-        </tbody>
-    </table>
+            </thead>
+        </table>
+    </form>
 </div>
-
+<div id="tbody"></div>
 </body>
 </html>

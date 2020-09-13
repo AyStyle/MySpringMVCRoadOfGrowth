@@ -83,10 +83,8 @@ public class ResumeController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public ModelAndView delete(Integer id) {
+    public void delete(Integer id) {
         resumeService.delete(id);
-        return list();
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
