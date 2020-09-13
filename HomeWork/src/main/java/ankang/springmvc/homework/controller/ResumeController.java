@@ -31,9 +31,6 @@ public class ResumeController {
     public ModelAndView login(@RequestParam("username") String username , @RequestParam("password") String password , HttpSession session) {
         final ModelAndView modelAndView = new ModelAndView();
 
-        System.out.println(username);
-        System.out.println(password);
-
         if ("admin".equals(username) && "admin".equals(password)) {
             session.setAttribute("isAuth" , true);
             modelAndView.setViewName("/jsp/list.jsp");
@@ -42,6 +39,20 @@ public class ResumeController {
             modelAndView.addObject("msg" , "用户名或密码错误，请重新登录！");
             modelAndView.setViewName("/jsp/login.jsp");
         }
+
+        return modelAndView;
+    }
+
+    /**
+     * 当请求没有登录时，跳转到这里，然后重新登录
+     *
+     * @return
+     */
+    @RequestMapping(value = "/unLogin")
+    public ModelAndView unLogin() {
+        final ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("/jsp/login.jsp");
 
         return modelAndView;
     }
@@ -72,14 +83,16 @@ public class ResumeController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void delete(Integer id) {
+    @ResponseBody
+    public ModelAndView delete(Integer id) {
         resumeService.delete(id);
+        return list();
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
     public Resume query(Integer id) {
-       return resumeService.query(id);
+        return resumeService.query(id);
     }
 
 }
