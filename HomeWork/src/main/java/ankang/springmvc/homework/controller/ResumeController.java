@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -79,12 +81,14 @@ public class ResumeController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Resume save(@RequestBody Resume resume) {
+        System.out.println(resume);
         return resumeService.save(resume);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void delete(Integer id) {
+    public void delete(@RequestParam("id") Integer id , HttpServletResponse response) {
         resumeService.delete(id);
+        response.setStatus(200);
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)

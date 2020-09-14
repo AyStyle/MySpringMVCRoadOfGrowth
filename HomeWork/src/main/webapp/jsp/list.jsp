@@ -82,11 +82,11 @@
             tr.appendChild(td);
 
             td = document.createElement("td");
-            td.innerHTML = "<button id = 'update_" + data.id + "' type='submit' onclick='return update();'>更新</button>";
+            td.innerHTML = "<button id = 'update_" + data.id + "' type='button' onclick='updated()'>更新</button>";
             tr.appendChild(td);
 
             td = document.createElement("td");
-            td.innerHTML = "<button id = 'delete_" + data.id + "' type='submit' onclick='return deleted();'>删除</button>";
+            td.innerHTML = "<button id = 'delete_" + data.id + "' type='button' onclick='deleted()'>删除</button>";
             tr.appendChild(td);
 
             return form;
@@ -104,30 +104,28 @@
                     let form = createForm(result);
                     document.getElementById("tbody").appendChild(form);
                 }
-            })
+            });
             return false;
         }
 
-        function update() {
+        function updated() {
             let event_id = event.target.id;
             let id = event_id.replace("update_", "");
-            let form = document.getElementById(id);
+            let inputs = $("#" + id).find("input");
 
             $.ajax({
                 url: "/resume/save",
                 async: true,
-                data: "{\"id\":" + form.getElementsByName("id").value + ",\"name\":\"" + form.getElementsByName("name").value + "\",\"phone\":\"" + form.getElementsByName("phone").value + "\",\"address\":\"" + form.getElementsByName("address").value + "\"}",
+                data: "{\"id\":" + inputs[0].value + ",\"name\":\"" + inputs[1].value + "\",\"phone\":\"" + inputs[2].value + "\",\"address\":\"" + inputs[3].value + "\"}",
                 contentType: 'application/json;charset=utf-8',
                 dataType: "json",
                 type: "POST",
                 success: function (result) {
-                    alert(result);
-                    form.getElementsByName("name").value = result.name;
-                    form.getElementsByName("phone").value = result.phone;
-                    form.getElementsByName("address").value = result.address;
+                    inputs[1].value = result.name;
+                    inputs[2].value = result.phone;
+                    inputs[3].value = result.address;
                 }
-            })
-            return false;
+            });
         }
 
         function deleted() {
@@ -139,27 +137,11 @@
                 contentType: 'application/x-www-form-urlencoded;charset=utf-8',
                 data: "id=" + id,
                 type: "POST",
-                complete: function (xhr, status) {
+                success: function (result) {
                     let child = document.getElementById(id);
                     child.parentElement.removeChild(child);
                 }
-            })
-            return false;
-        }
-
-        function query(form) {
-            $.ajax({
-                url: "/resume/save",
-                async: true,
-                contentType: 'application/x-www-form-urlencoded;charset=utf-8',
-                data: "id=" + form.getElementsByName("id").value,
-                dataType: "json",
-                type: "POST",
-                success: function (result, status) {
-
-                }
-            })
-            return false;
+            });
         }
     </script>
 </head>
@@ -182,7 +164,7 @@
                 <td><input id="create_phone" placeholder="电话" type="text" required="required"/></td>
                 <td><input id="create_address" placeholder="地址" type="text" required="required"/></td>
                 <td>
-                    <button type="submit" onclick="return create();">添加</button>
+                    <button type="button" onclick="create();">添加</button>
                 </td>
                 <td>
                     <button type="reset">清空</button>
