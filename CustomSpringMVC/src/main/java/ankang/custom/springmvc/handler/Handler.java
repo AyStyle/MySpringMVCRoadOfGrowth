@@ -102,7 +102,7 @@ public class Handler {
         final String[] usernames = req.getParameterValues("username");
 
         // usernames的个数只有一个时，才能进行权限校验，否则都是没有权限
-        if (Objects.isNull(usernames) && usernames.length != 1) {
+        if (Objects.isNull(usernames) || usernames.length != 1) {
             return false;
         }
 
