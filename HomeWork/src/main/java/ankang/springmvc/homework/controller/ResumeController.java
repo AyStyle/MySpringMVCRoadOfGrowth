@@ -81,7 +81,6 @@ public class ResumeController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Resume save(@RequestBody Resume resume) {
-        System.out.println(resume);
         return resumeService.save(resume);
     }
 
